@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    homePage: "./src/main.jsx",
+    addInventory: "./src/addInventory.jsx",
   },
   output: {
     filename: "[name].entry.js",
