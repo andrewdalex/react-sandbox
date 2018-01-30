@@ -1310,14 +1310,9 @@ var AddInvItemContainer = function (_React$Component) {
           _react2.default.createElement(
             'h2',
             null,
-            'Hello'
+            'Add Inventory'
           ),
-          _react2.default.createElement(
-            'button',
-            { onClick: this.closeModal },
-            'close'
-          ),
-          _react2.default.createElement(AddInventoryForm, null)
+          _react2.default.createElement(AddInventoryForm, { closeModal: this.closeModal })
         )
       );
     }
@@ -1325,6 +1320,40 @@ var AddInvItemContainer = function (_React$Component) {
 
   return AddInvItemContainer;
 }(_react2.default.Component);
+
+function TextInput(props) {
+  var feedback = null;
+  var validInputClass = "";
+  if (props.valid && props.valid === "valid") {
+    feedback = _react2.default.createElement(
+      'div',
+      { className: 'valid-feedback' },
+      props.feedback
+    );
+    validInputClass = "is-valid";
+  } else if (props.valid && props.valid === "invalid") {
+    feedback = _react2.default.createElement(
+      'div',
+      { className: 'invalid-feedback' },
+      props.feedback
+    );
+    validInputClass = "is-invalid";
+  }
+
+  return _react2.default.createElement(
+    'div',
+    { className: 'form-group' },
+    _react2.default.createElement(
+      'label',
+      { htmlFor: props.name },
+      props.label
+    ),
+    _react2.default.createElement('input', { id: props.name, className: 'form-control ' + validInputClass, type: 'text',
+      name: props.name, value: props.value, onChange: props.onChange
+    }),
+    feedback
+  );
+}
 
 var AddInventoryForm = function (_React$Component2) {
   _inherits(AddInventoryForm, _React$Component2);
@@ -1334,14 +1363,50 @@ var AddInventoryForm = function (_React$Component2) {
 
     var _this2 = _possibleConstructorReturn(this, (AddInventoryForm.__proto__ || Object.getPrototypeOf(AddInventoryForm)).call(this, props));
 
-    _this2.state = { itemName: '', itemPic: '' };
+    _this2.state = { itemName: '',
+      largeItemPic: '',
+      smallItemPic: '',
+      largeItemPicName: '',
+      smallItemPicName: '',
+      totalCost: '',
+      rentalPrice: '',
+      itemTypes: [],
+      itemType: '',
+      helpURL: '',
+      alert: false,
+      alertMessage: "",
+      alertType: ""
+    };
     _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
     _this2.handleInputChange = _this2.handleInputChange.bind(_this2);
     _this2.handleItemPicChange = _this2.handleItemPicChange.bind(_this2);
+    _this2.getItemTypes = _this2.getItemTypes.bind(_this2);
+    _this2.setDefaultItem = _this2.setDefaultItem.bind(_this2);
     return _this2;
   }
 
   _createClass(AddInventoryForm, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.getItemTypes();
+    }
+  }, {
+    key: 'getItemTypes',
+    value: function getItemTypes() {
+      var url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getItemType";
+      fetch(url).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        this.setState({ itemTypes: data });
+        this.setDefaultItem(data[0].ID);
+      }.bind(this));
+    }
+  }, {
+    key: 'setDefaultItem',
+    value: function setDefaultItem(value) {
+      this.setState({ itemType: value });
+    }
+  }, {
     key: 'handleInputChange',
     value: function handleInputChange(event) {
       var name = event.target.name;
@@ -1351,36 +1416,132 @@ var AddInventoryForm = function (_React$Component2) {
   }, {
     key: 'handleItemPicChange',
     value: function handleItemPicChange(event) {
+      var _setState2;
+
+      var name = event.target.name;
+      var picName = name + "Name";
       var fileName = event.target.files[0].name;
       var file = event.target.files[0];
 
-      this.setState({ itemPicName: fileName, itemPic: file });
+      this.setState((_setState2 = {}, _defineProperty(_setState2, picName, fileName), _defineProperty(_setState2, name, file), _setState2));
     }
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(event) {
-      alert("submit");
       event.preventDefault();
+      var formData = new FormData();
+      formData.append("itemName", this.state.itemName);
+      formData.append("helpURL", this.state.helpURL);
+      formData.append("totalCost", this.state.totalCost);
+      formData.append("rentalPrice", this.state.rentalPrice);
+      formData.append("itemType", this.state.itemType);
+      formData.append("largeItemPic", this.state.largeItemPic, this.state.largeItemPicName);
+      formData.append("smallItemPic", this.state.smallItemPic, this.state.smallItemPicName);
+
+      //routing info for backend
+      formData.append("data", "Inventory");
+      formData.append("action", "addItem");
+
+      var submit = {};
+      var url = "https://dev.dma.ucla.edu/api/";
+      var fetchOptions = {
+        method: "POST",
+        body: formData
+      };
+      //TODO: handle unauthorized errors
+      fetch(url, fetchOptions).then(function (response) {
+        return response.json();
+      }).then(function (json_data) {
+        if (json_data.success === true) {
+          this.setState({ alert: true, alertMessage: "Add Successful", alertType: "success" });
+        } else {
+          this.setState({ alert: true, alertMessage: "Add Not Successful", alertType: "danger" });
+        }
+      }.bind(this));
+
+      //TODO: on success, close modal, else display error
     }
   }, {
     key: 'render',
     value: function render() {
+      var itemTypes = this.state.itemTypes.map(function (type) {
+        return _react2.default.createElement(
+          'option',
+          { value: type.ID, key: type.ID },
+          type.name
+        );
+      });
+      var alertType = this.state.alertType;
+      var alert = this.state.alert ? _react2.default.createElement(
+        'div',
+        { className: 'alert alert-' + alertType, role: 'alert' },
+        this.state.alertMessage
+      ) : null;
       return _react2.default.createElement(
         'form',
         { onSubmit: this.handleSubmit },
+        alert,
+        _react2.default.createElement(TextInput, { name: 'itemName', label: 'Item Name',
+          value: this.state.itemName, onChange: this.handleInputChange }),
         _react2.default.createElement(
-          'label',
-          null,
-          'Item Name:',
-          _react2.default.createElement('input', { type: 'text', name: 'itemName', value: this.state.itemName, onChange: this.handleInputChange })
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'largeItemPic' },
+            'Large Picture of Item'
+          ),
+          _react2.default.createElement('input', { id: 'largeItemPic', className: 'form-control-file',
+            type: 'file', name: 'largeItemPic',
+            onChange: this.handleItemPicChange })
         ),
         _react2.default.createElement(
-          'label',
-          null,
-          'Item Picture:',
-          _react2.default.createElement('input', { type: 'file', name: 'itemPic', onChange: this.handleItemPicChange })
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'smallItemPic' },
+            'Small Picture of Item'
+          ),
+          _react2.default.createElement('input', { id: 'smallItemPic', className: 'form-control-file',
+            type: 'file', name: 'smallItemPic',
+            onChange: this.handleItemPicChange })
         ),
-        _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+        _react2.default.createElement(TextInput, { name: 'helpURL', label: 'Help URL',
+          value: this.state.helpURL, onChange: this.handleInputChange }),
+        _react2.default.createElement(TextInput, { name: 'totalCost', label: 'Total Cost',
+          value: this.state.totalCost, onChange: this.handleInputChange }),
+        _react2.default.createElement(TextInput, { name: 'rentalPrice', label: 'Rental Price',
+          value: this.state.rentalPrice, onChange: this.handleInputChange }),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'itemType' },
+            'Item Type'
+          ),
+          _react2.default.createElement(
+            'select',
+            { id: 'itemType', className: 'form-control', name: 'itemType',
+              value: this.state.itemType, onChange: this.handleInputChange },
+            itemTypes
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'button',
+            { onClick: this.props.closeModal },
+            'close'
+          )
+        )
       );
     }
   }]);

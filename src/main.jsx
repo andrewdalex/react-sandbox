@@ -35,7 +35,7 @@ class ItemsGridContainer extends React.Component {
     fetch(url)
     .then(
       (response) => response.json();
-    })
+    )
     .then(function(data){
       this.setState({itemList: data});
     }.bind(this))
