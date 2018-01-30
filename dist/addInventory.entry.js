@@ -1269,10 +1269,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AddInvItemContainer = function (_React$Component) {
   _inherits(AddInvItemContainer, _React$Component);
 
-  function AddInvItemContainer() {
+  function AddInvItemContainer(props) {
     _classCallCheck(this, AddInvItemContainer);
 
-    var _this = _possibleConstructorReturn(this, (AddInvItemContainer.__proto__ || Object.getPrototypeOf(AddInvItemContainer)).call(this));
+    var _this = _possibleConstructorReturn(this, (AddInvItemContainer.__proto__ || Object.getPrototypeOf(AddInvItemContainer)).call(this, props));
 
     _this.state = { modalIsOpen: false };
     _this.openModal = _this.openModal.bind(_this);
@@ -1299,7 +1299,7 @@ var AddInvItemContainer = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { onClick: this.openModal },
-          'Open Modal'
+          'Add Item to Inventory'
         ),
         _react2.default.createElement(
           _reactModal2.default,
@@ -1455,7 +1455,7 @@ var AddInventoryForm = function (_React$Component2) {
         if (json_data.success === true) {
           this.setState({ alert: true, alertMessage: "Add Successful", alertType: "success" });
         } else {
-          this.setState({ alert: true, alertMessage: "Add Not Successful", alertType: "danger" });
+          this.setState({ alert: true, alertMessage: json_data.error, alertType: "danger" });
         }
       }.bind(this));
 

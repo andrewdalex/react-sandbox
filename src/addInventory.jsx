@@ -4,8 +4,8 @@ import Modal from 'react-modal';
 
 
 class AddInvItemContainer extends React.Component{
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {modalIsOpen: false};
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -22,7 +22,7 @@ class AddInvItemContainer extends React.Component{
   render(){
     return(
       <div>
-      <button onClick={this.openModal}>Open Modal</button>
+      <button onClick={this.openModal}>Add Item to Inventory</button>
       <Modal
         isOpen={this.state.modalIsOpen}
         onRequestClose={this.closeModal}
