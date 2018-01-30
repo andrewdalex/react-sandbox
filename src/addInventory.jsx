@@ -142,7 +142,8 @@ class AddInventoryForm extends React.Component{
     const url = "https://dev.dma.ucla.edu/api/";
     let fetchOptions = {
       method: "POST",
-      body: formData
+      body: formData,
+      credentials: 'same-origin'
     };
     //TODO: handle unauthorized errors
     fetch(url, fetchOptions)

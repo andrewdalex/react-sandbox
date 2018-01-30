@@ -1446,7 +1446,8 @@ var AddInventoryForm = function (_React$Component2) {
       var url = "https://dev.dma.ucla.edu/api/";
       var fetchOptions = {
         method: "POST",
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
       };
       //TODO: handle unauthorized errors
       fetch(url, fetchOptions).then(function (response) {
