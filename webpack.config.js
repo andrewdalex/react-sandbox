@@ -2,7 +2,9 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    addInventory: "./src/addInventory.jsx",
+    // addInventory: "./src/addInventory.jsx",
+    // editInventory: "./src/editInventory.jsx",
+    testFile: "./src/testFile.jsx"
   },
   output: {
     filename: "[name].entry.js",
@@ -19,6 +21,10 @@ module.exports = {
             path.resolve(__dirname, "src"),
           ],
           exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   }

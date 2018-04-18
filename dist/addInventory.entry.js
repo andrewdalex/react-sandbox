@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 57);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -258,6 +258,21 @@ process.umask = function() { return 0; };
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports = __webpack_require__(31);
+} else {
+  module.exports = __webpack_require__(32);
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 /**
@@ -296,7 +311,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 module.exports = emptyFunction;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -353,21 +368,6 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(22);
-} else {
-  module.exports = __webpack_require__(23);
-}
-
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
@@ -506,7 +506,7 @@ module.exports = emptyObject;
 
 
 
-var emptyFunction = __webpack_require__(1);
+var emptyFunction = __webpack_require__(2);
 
 /**
  * Similar to invariant but only logs a warning if the condition is not met.
@@ -564,6 +564,41 @@ module.exports = warning;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+if (process.env.NODE_ENV !== 'production') {
+  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
+    Symbol.for &&
+    Symbol.for('react.element')) ||
+    0xeac7;
+
+  var isValidElement = function(object) {
+    return typeof object === 'object' &&
+      object !== null &&
+      object.$$typeof === REACT_ELEMENT_TYPE;
+  };
+
+  // By explicitly using `prop-types` you are opting into new development behavior.
+  // http://fb.me/prop-types-in-prod
+  var throwOnDirectAccess = true;
+  module.exports = __webpack_require__(43)(isValidElement, throwOnDirectAccess);
+} else {
+  // By explicitly using `prop-types` you are opting into new production behavior.
+  // http://fb.me/prop-types-in-prod
+  module.exports = __webpack_require__(44)();
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -575,9 +610,9 @@ module.exports = warning;
 
 
 if (process.env.NODE_ENV !== 'production') {
-  var invariant = __webpack_require__(2);
+  var invariant = __webpack_require__(3);
   var warning = __webpack_require__(6);
-  var ReactPropTypesSecret = __webpack_require__(8);
+  var ReactPropTypesSecret = __webpack_require__(9);
   var loggedTypeFailures = {};
 }
 
@@ -628,7 +663,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -647,7 +682,7 @@ module.exports = ReactPropTypesSecret;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -686,42 +721,8 @@ var ExecutionEnvironment = {
 module.exports = ExecutionEnvironment;
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-if (process.env.NODE_ENV !== 'production') {
-  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
-    Symbol.for &&
-    Symbol.for('react.element')) ||
-    0xeac7;
-
-  var isValidElement = function(object) {
-    return typeof object === 'object' &&
-      object !== null &&
-      object.$$typeof === REACT_ELEMENT_TYPE;
-  };
-
-  // By explicitly using `prop-types` you are opting into new development behavior.
-  // http://fb.me/prop-types-in-prod
-  var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(34)(isValidElement, throwOnDirectAccess);
-} else {
-  // By explicitly using `prop-types` you are opting into new production behavior.
-  // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(35)();
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 11 */
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -759,15 +760,19 @@ if (process.env.NODE_ENV === 'production') {
   // DCE check should happen before ReactDOM bundle executes so that
   // DevTools can report bad minification during injection.
   checkDCE();
-  module.exports = __webpack_require__(24);
+  module.exports = __webpack_require__(33);
 } else {
-  module.exports = __webpack_require__(27);
+  module.exports = __webpack_require__(36);
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 12 */
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -782,7 +787,7 @@ if (process.env.NODE_ENV === 'production') {
  * @typechecks
  */
 
-var emptyFunction = __webpack_require__(1);
+var emptyFunction = __webpack_require__(2);
 
 /**
  * Upstream version of event listener. Does not take into account specific
@@ -848,7 +853,7 @@ module.exports = EventListener;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 13 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -919,7 +924,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 14 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -934,7 +939,7 @@ module.exports = shallowEqual;
  * 
  */
 
-var isTextNode = __webpack_require__(25);
+var isTextNode = __webpack_require__(34);
 
 /*eslint-disable no-bitwise */
 
@@ -962,7 +967,7 @@ function containsNode(outerNode, innerNode) {
 module.exports = containsNode;
 
 /***/ }),
-/* 15 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -992,7 +997,7 @@ function focusNode(node) {
 module.exports = focusNode;
 
 /***/ }),
-/* 16 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1034,526 +1039,16 @@ function getActiveElement(doc) /*?DOMElement*/{
 module.exports = getActiveElement;
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = findTabbableDescendants;
-/*!
- * Adapted from jQuery UI core
- *
- * http://jqueryui.com
- *
- * Copyright 2014 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * http://api.jqueryui.com/category/ui-core/
- */
-
-var tabbableNode = /input|select|textarea|button|object/;
-
-function hidesContents(element) {
-  var zeroSize = element.offsetWidth <= 0 && element.offsetHeight <= 0;
-
-  // If the node is empty, this is good enough
-  if (zeroSize && !element.innerHTML) return true;
-
-  // Otherwise we need to check some styles
-  var style = window.getComputedStyle(element);
-  return zeroSize ? style.getPropertyValue("overflow") !== "visible" : style.getPropertyValue("display") == "none";
-}
-
-function visible(element) {
-  var parentElement = element;
-  while (parentElement) {
-    if (parentElement === document.body) break;
-    if (hidesContents(parentElement)) return false;
-    parentElement = parentElement.parentNode;
-  }
-  return true;
-}
-
-function focusable(element, isTabIndexNotNaN) {
-  var nodeName = element.nodeName.toLowerCase();
-  var res = tabbableNode.test(nodeName) && !element.disabled || (nodeName === "a" ? element.href || isTabIndexNotNaN : isTabIndexNotNaN);
-  return res && visible(element);
-}
-
-function tabbable(element) {
-  var tabIndex = element.getAttribute("tabindex");
-  if (tabIndex === null) tabIndex = undefined;
-  var isTabIndexNaN = isNaN(tabIndex);
-  return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
-}
-
-function findTabbableDescendants(element) {
-  return [].slice.call(element.querySelectorAll("*"), 0).filter(tabbable);
-}
-module.exports = exports["default"];
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.assertNodeList = assertNodeList;
-exports.setElement = setElement;
-exports.tryForceFallback = tryForceFallback;
-exports.validateElement = validateElement;
-exports.hide = hide;
-exports.show = show;
-exports.documentNotReadyOrSSRTesting = documentNotReadyOrSSRTesting;
-exports.resetForTesting = resetForTesting;
-var globalElement = null;
-
-function assertNodeList(nodeList, selector) {
-  if (!nodeList || !nodeList.length) {
-    throw new Error("react-modal: No elements were found for selector " + selector + ".");
-  }
-}
-
-function setElement(element) {
-  var useElement = element;
-  if (typeof useElement === "string") {
-    var el = document.querySelectorAll(useElement);
-    assertNodeList(el, useElement);
-    useElement = "length" in el ? el[0] : el;
-  }
-  globalElement = useElement || globalElement;
-  return globalElement;
-}
-
-function tryForceFallback() {
-  if (document && document.body) {
-    // force fallback to document.body
-    setElement(document.body);
-    return true;
-  }
-  return false;
-}
-
-function validateElement(appElement) {
-  if (!appElement && !globalElement && !tryForceFallback()) {
-    throw new Error(["react-modal: Cannot fallback to `document.body`, because it is not", "ready or available. If you are doing server-side rendering, use this", "function to defined an element. `Modal.setAppElement(el)` to make", "this accessible"].join(" "));
-  }
-}
-
-function hide(appElement) {
-  validateElement(appElement);
-  (appElement || globalElement).setAttribute("aria-hidden", "true");
-}
-
-function show(appElement) {
-  validateElement(appElement);
-  (appElement || globalElement).removeAttribute("aria-hidden");
-}
-
-function documentNotReadyOrSSRTesting() {
-  globalElement = null;
-}
-
-function resetForTesting() {
-  globalElement = document.body;
-}
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.get = get;
-exports.add = add;
-exports.remove = remove;
-exports.totalCount = totalCount;
-var classListMap = {};
-
-function get() {
-  return classListMap;
-}
-
-function add(bodyClass) {
-  // Set variable and default if none
-  if (!classListMap[bodyClass]) {
-    classListMap[bodyClass] = 0;
-  }
-  classListMap[bodyClass] += 1;
-  return bodyClass;
-}
-
-function remove(bodyClass) {
-  if (classListMap[bodyClass]) {
-    classListMap[bodyClass] -= 1;
-  }
-  return bodyClass;
-}
-
-function totalCount() {
-  return Object.keys(classListMap).reduce(function (acc, curr) {
-    return acc + classListMap[curr];
-  }, 0);
-}
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.canUseDOM = undefined;
-
-var _exenv = __webpack_require__(42);
-
-var _exenv2 = _interopRequireDefault(_exenv);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var EE = _exenv2.default;
-
-var SafeHTMLElement = EE.canUseDOM ? window.HTMLElement : {};
-
-var canUseDOM = exports.canUseDOM = EE.canUseDOM;
-
-exports.default = SafeHTMLElement;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(3);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = __webpack_require__(11);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _reactModal = __webpack_require__(36);
-
-var _reactModal2 = _interopRequireDefault(_reactModal);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var AddInvItemContainer = function (_React$Component) {
-  _inherits(AddInvItemContainer, _React$Component);
-
-  function AddInvItemContainer(props) {
-    _classCallCheck(this, AddInvItemContainer);
-
-    var _this = _possibleConstructorReturn(this, (AddInvItemContainer.__proto__ || Object.getPrototypeOf(AddInvItemContainer)).call(this, props));
-
-    _this.state = { modalIsOpen: false };
-    _this.openModal = _this.openModal.bind(_this);
-    _this.closeModal = _this.closeModal.bind(_this);
-    return _this;
-  }
-
-  _createClass(AddInvItemContainer, [{
-    key: 'openModal',
-    value: function openModal() {
-      this.setState({ modalIsOpen: true });
-    }
-  }, {
-    key: 'closeModal',
-    value: function closeModal() {
-      this.setState({ modalIsOpen: false });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          'button',
-          { onClick: this.openModal },
-          'Add Item to Inventory'
-        ),
-        _react2.default.createElement(
-          _reactModal2.default,
-          {
-            isOpen: this.state.modalIsOpen,
-            onRequestClose: this.closeModal
-          },
-          _react2.default.createElement(
-            'h2',
-            null,
-            'Add Inventory'
-          ),
-          _react2.default.createElement(AddInventoryForm, { closeModal: this.closeModal })
-        )
-      );
-    }
-  }]);
-
-  return AddInvItemContainer;
-}(_react2.default.Component);
-
-function TextInput(props) {
-  var feedback = null;
-  var validInputClass = "";
-  if (props.valid && props.valid === "valid") {
-    feedback = _react2.default.createElement(
-      'div',
-      { className: 'valid-feedback' },
-      props.feedback
-    );
-    validInputClass = "is-valid";
-  } else if (props.valid && props.valid === "invalid") {
-    feedback = _react2.default.createElement(
-      'div',
-      { className: 'invalid-feedback' },
-      props.feedback
-    );
-    validInputClass = "is-invalid";
-  }
-
-  return _react2.default.createElement(
-    'div',
-    { className: 'form-group' },
-    _react2.default.createElement(
-      'label',
-      { htmlFor: props.name },
-      props.label
-    ),
-    _react2.default.createElement('input', { id: props.name, className: 'form-control ' + validInputClass, type: 'text',
-      name: props.name, value: props.value, onChange: props.onChange
-    }),
-    feedback
-  );
-}
-
-var AddInventoryForm = function (_React$Component2) {
-  _inherits(AddInventoryForm, _React$Component2);
-
-  function AddInventoryForm(props) {
-    _classCallCheck(this, AddInventoryForm);
-
-    var _this2 = _possibleConstructorReturn(this, (AddInventoryForm.__proto__ || Object.getPrototypeOf(AddInventoryForm)).call(this, props));
-
-    _this2.state = { itemName: '',
-      largeItemPic: '',
-      smallItemPic: '',
-      largeItemPicName: '',
-      smallItemPicName: '',
-      totalCost: '',
-      rentalPrice: '',
-      itemTypes: [],
-      itemType: '',
-      helpURL: '',
-      alert: false,
-      alertMessage: "",
-      alertType: ""
-    };
-    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
-    _this2.handleInputChange = _this2.handleInputChange.bind(_this2);
-    _this2.handleItemPicChange = _this2.handleItemPicChange.bind(_this2);
-    _this2.getItemTypes = _this2.getItemTypes.bind(_this2);
-    _this2.setDefaultItem = _this2.setDefaultItem.bind(_this2);
-    return _this2;
-  }
-
-  _createClass(AddInventoryForm, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.getItemTypes();
-    }
-  }, {
-    key: 'getItemTypes',
-    value: function getItemTypes() {
-      var url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getItemType";
-      fetch(url).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        this.setState({ itemTypes: data });
-        this.setDefaultItem(data[0].ID);
-      }.bind(this));
-    }
-  }, {
-    key: 'setDefaultItem',
-    value: function setDefaultItem(value) {
-      this.setState({ itemType: value });
-    }
-  }, {
-    key: 'handleInputChange',
-    value: function handleInputChange(event) {
-      var name = event.target.name;
-      var value = event.target.value;
-      this.setState(_defineProperty({}, name, value));
-    }
-  }, {
-    key: 'handleItemPicChange',
-    value: function handleItemPicChange(event) {
-      var _setState2;
-
-      var name = event.target.name;
-      var picName = name + "Name";
-      var fileName = event.target.files[0].name;
-      var file = event.target.files[0];
-
-      this.setState((_setState2 = {}, _defineProperty(_setState2, picName, fileName), _defineProperty(_setState2, name, file), _setState2));
-    }
-  }, {
-    key: 'handleSubmit',
-    value: function handleSubmit(event) {
-      event.preventDefault();
-      var formData = new FormData();
-      formData.append("itemName", this.state.itemName);
-      formData.append("helpURL", this.state.helpURL);
-      formData.append("totalCost", this.state.totalCost);
-      formData.append("rentalPrice", this.state.rentalPrice);
-      formData.append("itemType", this.state.itemType);
-      formData.append("largeItemPic", this.state.largeItemPic, this.state.largeItemPicName);
-      formData.append("smallItemPic", this.state.smallItemPic, this.state.smallItemPicName);
-
-      //routing info for backend
-      formData.append("data", "Inventory");
-      formData.append("action", "addItem");
-
-      var submit = {};
-      var url = "https://dev.dma.ucla.edu/api/";
-      var fetchOptions = {
-        method: "POST",
-        body: formData,
-        credentials: 'same-origin'
-      };
-      //TODO: handle unauthorized errors
-      fetch(url, fetchOptions).then(function (response) {
-        return response.json();
-      }).then(function (json_data) {
-        if (json_data.success === true) {
-          this.setState({ alert: true, alertMessage: "Add Successful", alertType: "success" });
-        } else {
-          this.setState({ alert: true, alertMessage: json_data.error, alertType: "danger" });
-        }
-      }.bind(this));
-
-      //TODO: on success, close modal, else display error
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var itemTypes = this.state.itemTypes.map(function (type) {
-        return _react2.default.createElement(
-          'option',
-          { value: type.ID, key: type.ID },
-          type.name
-        );
-      });
-      var alertType = this.state.alertType;
-      var alert = this.state.alert ? _react2.default.createElement(
-        'div',
-        { className: 'alert alert-' + alertType, role: 'alert' },
-        this.state.alertMessage
-      ) : null;
-      return _react2.default.createElement(
-        'form',
-        { onSubmit: this.handleSubmit },
-        alert,
-        _react2.default.createElement(TextInput, { name: 'itemName', label: 'Item Name',
-          value: this.state.itemName, onChange: this.handleInputChange }),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group' },
-          _react2.default.createElement(
-            'label',
-            { htmlFor: 'largeItemPic' },
-            'Large Picture of Item'
-          ),
-          _react2.default.createElement('input', { id: 'largeItemPic', className: 'form-control-file',
-            type: 'file', name: 'largeItemPic',
-            onChange: this.handleItemPicChange })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group' },
-          _react2.default.createElement(
-            'label',
-            { htmlFor: 'smallItemPic' },
-            'Small Picture of Item'
-          ),
-          _react2.default.createElement('input', { id: 'smallItemPic', className: 'form-control-file',
-            type: 'file', name: 'smallItemPic',
-            onChange: this.handleItemPicChange })
-        ),
-        _react2.default.createElement(TextInput, { name: 'helpURL', label: 'Help URL',
-          value: this.state.helpURL, onChange: this.handleInputChange }),
-        _react2.default.createElement(TextInput, { name: 'totalCost', label: 'Total Cost',
-          value: this.state.totalCost, onChange: this.handleInputChange }),
-        _react2.default.createElement(TextInput, { name: 'rentalPrice', label: 'Rental Price',
-          value: this.state.rentalPrice, onChange: this.handleInputChange }),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group' },
-          _react2.default.createElement(
-            'label',
-            { htmlFor: 'itemType' },
-            'Item Type'
-          ),
-          _react2.default.createElement(
-            'select',
-            { id: 'itemType', className: 'form-control', name: 'itemType',
-              value: this.state.itemType, onChange: this.handleInputChange },
-            itemTypes
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group' },
-          _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group' },
-          _react2.default.createElement(
-            'button',
-            { onClick: this.props.closeModal },
-            'close'
-          )
-        )
-      );
-    }
-  }]);
-
-  return AddInventoryForm;
-}(_react2.default.Component);
-
-_reactDom2.default.render(_react2.default.createElement(AddInvItemContainer, null), document.getElementById('root'));
-
-/***/ }),
-/* 22 */
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1566,7 +1061,7 @@ _reactDom2.default.render(_react2.default.createElement(AddInvItemContainer, nul
  This source code is licensed under the MIT license found in the
  LICENSE file in the root directory of this source tree.
 */
-var f=__webpack_require__(4),p=__webpack_require__(5);__webpack_require__(2);var r=__webpack_require__(1);
+var f=__webpack_require__(4),p=__webpack_require__(5);__webpack_require__(3);var r=__webpack_require__(2);
 function t(a){for(var b=arguments.length-1,d="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,e=0;e<b;e++)d+="\x26args[]\x3d"+encodeURIComponent(arguments[e+1]);b=Error(d+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}
 var u={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function v(a,b,d){this.props=a;this.context=b;this.refs=p;this.updater=d||u}v.prototype.isReactComponent={};v.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?t("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState")};v.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate")};
 function w(a,b,d){this.props=a;this.context=b;this.refs=p;this.updater=d||u}function x(){}x.prototype=v.prototype;var y=w.prototype=new x;y.constructor=w;f(y,v.prototype);y.isPureReactComponent=!0;function z(a,b,d){this.props=a;this.context=b;this.refs=p;this.updater=d||u}var A=z.prototype=new x;A.constructor=z;f(A,v.prototype);A.unstable_isAsyncReactComponent=!0;A.render=function(){return this.props.children};
@@ -1583,7 +1078,7 @@ module.exports={Children:{map:S.map,forEach:S.forEach,count:S.count,toArray:S.to
 
 
 /***/ }),
-/* 23 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1606,9 +1101,9 @@ if (process.env.NODE_ENV !== "production") {
 var objectAssign$1 = __webpack_require__(4);
 var require$$0 = __webpack_require__(6);
 var emptyObject = __webpack_require__(5);
-var invariant = __webpack_require__(2);
-var emptyFunction = __webpack_require__(1);
-var checkPropTypes = __webpack_require__(7);
+var invariant = __webpack_require__(3);
+var emptyFunction = __webpack_require__(2);
+var checkPropTypes = __webpack_require__(8);
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -3289,7 +2784,7 @@ module.exports = ReactEntry;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 24 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3303,7 +2798,7 @@ module.exports = ReactEntry;
  LICENSE file in the root directory of this source tree.
  Modernizr 3.0.0pre (Custom Build) | MIT
 */
-var aa=__webpack_require__(3);__webpack_require__(2);var l=__webpack_require__(9),n=__webpack_require__(4),ba=__webpack_require__(12),ca=__webpack_require__(1),da=__webpack_require__(5),ea=__webpack_require__(13),fa=__webpack_require__(14),ha=__webpack_require__(15),ia=__webpack_require__(16);
+var aa=__webpack_require__(1);__webpack_require__(3);var l=__webpack_require__(10),n=__webpack_require__(4),ba=__webpack_require__(17),ca=__webpack_require__(2),da=__webpack_require__(5),ea=__webpack_require__(18),fa=__webpack_require__(19),ha=__webpack_require__(20),ia=__webpack_require__(21);
 function w(a){for(var b=arguments.length-1,c="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,d=0;d<b;d++)c+="\x26args[]\x3d"+encodeURIComponent(arguments[d+1]);b=Error(c+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}aa?void 0:w("227");
 function ja(a){switch(a){case "svg":return"http://www.w3.org/2000/svg";case "math":return"http://www.w3.org/1998/Math/MathML";default:return"http://www.w3.org/1999/xhtml"}}
 var ka={Namespaces:{html:"http://www.w3.org/1999/xhtml",mathml:"http://www.w3.org/1998/Math/MathML",svg:"http://www.w3.org/2000/svg"},getIntrinsicNamespace:ja,getChildNamespace:function(a,b){return null==a||"http://www.w3.org/1999/xhtml"===a?ja(b):"http://www.w3.org/2000/svg"===a&&"foreignObject"===b?"http://www.w3.org/1999/xhtml":a}},la=null,oa={};
@@ -3552,7 +3047,7 @@ unstable_deferredUpdates:Xj.deferredUpdates,flushSync:Xj.flushSync,__SECRET_INTE
 
 
 /***/ }),
-/* 25 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3567,7 +3062,7 @@ unstable_deferredUpdates:Xj.deferredUpdates,flushSync:Xj.flushSync,__SECRET_INTE
  * @typechecks
  */
 
-var isNode = __webpack_require__(26);
+var isNode = __webpack_require__(35);
 
 /**
  * @param {*} object The object to check.
@@ -3580,7 +3075,7 @@ function isTextNode(object) {
 module.exports = isTextNode;
 
 /***/ }),
-/* 26 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3608,7 +3103,7 @@ function isNode(object) {
 module.exports = isNode;
 
 /***/ }),
-/* 27 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3628,23 +3123,23 @@ if (process.env.NODE_ENV !== "production") {
 
 'use strict';
 
-var react = __webpack_require__(3);
-var invariant = __webpack_require__(2);
-var ExecutionEnvironment = __webpack_require__(9);
+var react = __webpack_require__(1);
+var invariant = __webpack_require__(3);
+var ExecutionEnvironment = __webpack_require__(10);
 var _assign = __webpack_require__(4);
-var EventListener = __webpack_require__(12);
+var EventListener = __webpack_require__(17);
 var require$$0 = __webpack_require__(6);
-var hyphenateStyleName = __webpack_require__(28);
-var emptyFunction = __webpack_require__(1);
-var camelizeStyleName = __webpack_require__(30);
-var performanceNow = __webpack_require__(32);
-var propTypes = __webpack_require__(10);
+var hyphenateStyleName = __webpack_require__(37);
+var emptyFunction = __webpack_require__(2);
+var camelizeStyleName = __webpack_require__(39);
+var performanceNow = __webpack_require__(41);
+var propTypes = __webpack_require__(7);
 var emptyObject = __webpack_require__(5);
-var checkPropTypes = __webpack_require__(7);
-var shallowEqual = __webpack_require__(13);
-var containsNode = __webpack_require__(14);
-var focusNode = __webpack_require__(15);
-var getActiveElement = __webpack_require__(16);
+var checkPropTypes = __webpack_require__(8);
+var shallowEqual = __webpack_require__(18);
+var containsNode = __webpack_require__(19);
+var focusNode = __webpack_require__(20);
+var getActiveElement = __webpack_require__(21);
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -20837,7 +20332,7 @@ module.exports = ReactDOMFiberEntry;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 28 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20852,7 +20347,7 @@ module.exports = ReactDOMFiberEntry;
 
 
 
-var hyphenate = __webpack_require__(29);
+var hyphenate = __webpack_require__(38);
 
 var msPattern = /^ms-/;
 
@@ -20879,7 +20374,7 @@ function hyphenateStyleName(string) {
 module.exports = hyphenateStyleName;
 
 /***/ }),
-/* 29 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20915,7 +20410,7 @@ function hyphenate(string) {
 module.exports = hyphenate;
 
 /***/ }),
-/* 30 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20930,7 +20425,7 @@ module.exports = hyphenate;
 
 
 
-var camelize = __webpack_require__(31);
+var camelize = __webpack_require__(40);
 
 var msPattern = /^-ms-/;
 
@@ -20958,7 +20453,7 @@ function camelizeStyleName(string) {
 module.exports = camelizeStyleName;
 
 /***/ }),
-/* 31 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20993,7 +20488,7 @@ function camelize(string) {
 module.exports = camelize;
 
 /***/ }),
-/* 32 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21008,7 +20503,7 @@ module.exports = camelize;
  * @typechecks
  */
 
-var performance = __webpack_require__(33);
+var performance = __webpack_require__(42);
 
 var performanceNow;
 
@@ -21030,7 +20525,7 @@ if (performance.now) {
 module.exports = performanceNow;
 
 /***/ }),
-/* 33 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21045,7 +20540,7 @@ module.exports = performanceNow;
 
 
 
-var ExecutionEnvironment = __webpack_require__(9);
+var ExecutionEnvironment = __webpack_require__(10);
 
 var performance;
 
@@ -21056,7 +20551,7 @@ if (ExecutionEnvironment.canUseDOM) {
 module.exports = performance || {};
 
 /***/ }),
-/* 34 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21069,13 +20564,13 @@ module.exports = performance || {};
 
 
 
-var emptyFunction = __webpack_require__(1);
-var invariant = __webpack_require__(2);
+var emptyFunction = __webpack_require__(2);
+var invariant = __webpack_require__(3);
 var warning = __webpack_require__(6);
 var assign = __webpack_require__(4);
 
-var ReactPropTypesSecret = __webpack_require__(8);
-var checkPropTypes = __webpack_require__(7);
+var ReactPropTypesSecret = __webpack_require__(9);
+var checkPropTypes = __webpack_require__(8);
 
 module.exports = function(isValidElement, throwOnDirectAccess) {
   /* global Symbol */
@@ -21606,7 +21101,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 35 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21619,9 +21114,9 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 
 
 
-var emptyFunction = __webpack_require__(1);
-var invariant = __webpack_require__(2);
-var ReactPropTypesSecret = __webpack_require__(8);
+var emptyFunction = __webpack_require__(2);
+var invariant = __webpack_require__(3);
+var ReactPropTypesSecret = __webpack_require__(9);
 
 module.exports = function() {
   function shim(props, propName, componentName, location, propFullName, secret) {
@@ -21671,7 +21166,790 @@ module.exports = function() {
 
 
 /***/ }),
-/* 36 */
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = findTabbableDescendants;
+/*!
+ * Adapted from jQuery UI core
+ *
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/category/ui-core/
+ */
+
+var tabbableNode = /input|select|textarea|button|object/;
+
+function hidesContents(element) {
+  var zeroSize = element.offsetWidth <= 0 && element.offsetHeight <= 0;
+
+  // If the node is empty, this is good enough
+  if (zeroSize && !element.innerHTML) return true;
+
+  // Otherwise we need to check some styles
+  var style = window.getComputedStyle(element);
+  return zeroSize ? style.getPropertyValue("overflow") !== "visible" : style.getPropertyValue("display") == "none";
+}
+
+function visible(element) {
+  var parentElement = element;
+  while (parentElement) {
+    if (parentElement === document.body) break;
+    if (hidesContents(parentElement)) return false;
+    parentElement = parentElement.parentNode;
+  }
+  return true;
+}
+
+function focusable(element, isTabIndexNotNaN) {
+  var nodeName = element.nodeName.toLowerCase();
+  var res = tabbableNode.test(nodeName) && !element.disabled || (nodeName === "a" ? element.href || isTabIndexNotNaN : isTabIndexNotNaN);
+  return res && visible(element);
+}
+
+function tabbable(element) {
+  var tabIndex = element.getAttribute("tabindex");
+  if (tabIndex === null) tabIndex = undefined;
+  var isTabIndexNaN = isNaN(tabIndex);
+  return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
+}
+
+function findTabbableDescendants(element) {
+  return [].slice.call(element.querySelectorAll("*"), 0).filter(tabbable);
+}
+module.exports = exports["default"];
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.assertNodeList = assertNodeList;
+exports.setElement = setElement;
+exports.tryForceFallback = tryForceFallback;
+exports.validateElement = validateElement;
+exports.hide = hide;
+exports.show = show;
+exports.documentNotReadyOrSSRTesting = documentNotReadyOrSSRTesting;
+exports.resetForTesting = resetForTesting;
+var globalElement = null;
+
+function assertNodeList(nodeList, selector) {
+  if (!nodeList || !nodeList.length) {
+    throw new Error("react-modal: No elements were found for selector " + selector + ".");
+  }
+}
+
+function setElement(element) {
+  var useElement = element;
+  if (typeof useElement === "string") {
+    var el = document.querySelectorAll(useElement);
+    assertNodeList(el, useElement);
+    useElement = "length" in el ? el[0] : el;
+  }
+  globalElement = useElement || globalElement;
+  return globalElement;
+}
+
+function tryForceFallback() {
+  if (document && document.body) {
+    // force fallback to document.body
+    setElement(document.body);
+    return true;
+  }
+  return false;
+}
+
+function validateElement(appElement) {
+  if (!appElement && !globalElement && !tryForceFallback()) {
+    throw new Error(["react-modal: Cannot fallback to `document.body`, because it is not", "ready or available. If you are doing server-side rendering, use this", "function to defined an element. `Modal.setAppElement(el)` to make", "this accessible"].join(" "));
+  }
+}
+
+function hide(appElement) {
+  validateElement(appElement);
+  (appElement || globalElement).setAttribute("aria-hidden", "true");
+}
+
+function show(appElement) {
+  validateElement(appElement);
+  (appElement || globalElement).removeAttribute("aria-hidden");
+}
+
+function documentNotReadyOrSSRTesting() {
+  globalElement = null;
+}
+
+function resetForTesting() {
+  globalElement = document.body;
+}
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.get = get;
+exports.add = add;
+exports.remove = remove;
+exports.totalCount = totalCount;
+var classListMap = {};
+
+function get() {
+  return classListMap;
+}
+
+function add(bodyClass) {
+  // Set variable and default if none
+  if (!classListMap[bodyClass]) {
+    classListMap[bodyClass] = 0;
+  }
+  classListMap[bodyClass] += 1;
+  return bodyClass;
+}
+
+function remove(bodyClass) {
+  if (classListMap[bodyClass]) {
+    classListMap[bodyClass] -= 1;
+  }
+  return bodyClass;
+}
+
+function totalCount() {
+  return Object.keys(classListMap).reduce(function (acc, curr) {
+    return acc + classListMap[curr];
+  }, 0);
+}
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.canUseDOM = undefined;
+
+var _exenv = __webpack_require__(64);
+
+var _exenv2 = _interopRequireDefault(_exenv);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var EE = _exenv2.default;
+
+var SafeHTMLElement = EE.canUseDOM ? window.HTMLElement : {};
+
+var canUseDOM = exports.canUseDOM = EE.canUseDOM;
+
+exports.default = SafeHTMLElement;
+
+/***/ }),
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InvItemFormContainer = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(12);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactModal = __webpack_require__(58);
+
+var _reactModal2 = _interopRequireDefault(_reactModal);
+
+__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"bootstrap/dist/css/bootstrap.min.css\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var InvItemFormContainer = exports.InvItemFormContainer = function (_React$Component) {
+  _inherits(InvItemFormContainer, _React$Component);
+
+  function InvItemFormContainer(props) {
+    _classCallCheck(this, InvItemFormContainer);
+
+    console.log("constructor called");
+
+    var _this = _possibleConstructorReturn(this, (InvItemFormContainer.__proto__ || Object.getPrototypeOf(InvItemFormContainer)).call(this, props));
+
+    _this.state = { modalIsOpen: props.modalIsOpen,
+      isEdit: props.isEdit };
+    _this.openModal = _this.openModal.bind(_this);
+    _this.closeModal = _this.closeModal.bind(_this);
+    return _this;
+  }
+
+  _createClass(InvItemFormContainer, [{
+    key: 'openModal',
+    value: function openModal() {
+      this.setState({ modalIsOpen: true });
+    }
+  }, {
+    key: 'closeModal',
+    value: function closeModal() {
+      this.setState({ modalIsOpen: false });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        !this.state.isEdit && _react2.default.createElement(
+          'button',
+          { onClick: this.openModal },
+          'Add Item to Inventory'
+        ),
+        _react2.default.createElement(
+          _reactModal2.default,
+          {
+            isOpen: this.state.modalIsOpen,
+            onRequestClose: this.closeModal
+          },
+          _react2.default.createElement(
+            'div',
+            { className: 'row' },
+            _react2.default.createElement('div', { className: 'col-md-4' }),
+            _react2.default.createElement(
+              'div',
+              { className: 'col-md-4' },
+              _react2.default.createElement(
+                'h2',
+                null,
+                'Add Inventory'
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'col-md-4' },
+              _react2.default.createElement(
+                'button',
+                { onClick: this.closeModal, type: 'button', className: 'close', 'aria-label': 'Close' },
+                _react2.default.createElement(
+                  'span',
+                  { 'aria-hidden': 'true' },
+                  '\xD7'
+                )
+              )
+            )
+          ),
+          _react2.default.createElement(AddInventoryForm, { closeModal: this.closeModal })
+        )
+      );
+    }
+  }]);
+
+  return InvItemFormContainer;
+}(_react2.default.Component);
+
+function TextInput(props) {
+  var feedback = null;
+  var validInputClass = "";
+  if (props.valid && props.valid === "valid") {
+    feedback = _react2.default.createElement(
+      'div',
+      { className: 'valid-feedback' },
+      props.feedback
+    );
+    validInputClass = "is-valid";
+  } else if (props.valid && props.valid === "invalid") {
+    feedback = _react2.default.createElement(
+      'div',
+      { className: 'invalid-feedback' },
+      props.feedback
+    );
+    validInputClass = "is-invalid";
+  }
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement('input', { id: props.name, className: 'form-control ' + validInputClass, type: 'text',
+      name: props.name, value: props.value, onChange: props.onChange,
+      placeholder: props.placeholder ? props.placeholder : ""
+    }),
+    feedback
+  );
+}
+
+function FormRow(props) {
+  return _react2.default.createElement(
+    'div',
+    { className: 'form-row' },
+    props.children
+  );
+}
+
+function FormGroup(props) {
+  return _react2.default.createElement(
+    'div',
+    { className: 'form-group ' + (props.width && 'col-md-' + props.width) },
+    props.children
+  );
+}
+
+var AddInventoryForm = function (_React$Component2) {
+  _inherits(AddInventoryForm, _React$Component2);
+
+  function AddInventoryForm(props) {
+    _classCallCheck(this, AddInventoryForm);
+
+    var _this2 = _possibleConstructorReturn(this, (AddInventoryForm.__proto__ || Object.getPrototypeOf(AddInventoryForm)).call(this, props));
+
+    _this2.state = { itemName: '',
+      largeItemPic: '',
+      smallItemPic: '',
+      largeItemPicName: '',
+      smallItemPicName: '',
+      totalCost: '',
+      rentalPrice: '',
+      itemTypes: [],
+      itemType: '',
+      damageStatuses: [],
+      helpURL: '',
+      alert: false,
+      alertMessage: "",
+      alertType: "",
+      packages: []
+    };
+    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
+    _this2.handleInputChange = _this2.handleInputChange.bind(_this2);
+    _this2.handleItemPicChange = _this2.handleItemPicChange.bind(_this2);
+    _this2.getItemTypes = _this2.getItemTypes.bind(_this2);
+    _this2.setDefaultItem = _this2.setDefaultItem.bind(_this2);
+    _this2.appendPackageForm = _this2.appendPackageForm.bind(_this2);
+    _this2.handlePackageFormChange = _this2.handlePackageFormChange.bind(_this2);
+    _this2.removePackageForm = _this2.removePackageForm.bind(_this2);
+    _this2.getDamageStatuses = _this2.getDamageStatuses.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(AddInventoryForm, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.getItemTypes();
+      this.getDamageStatuses();
+    }
+  }, {
+    key: 'getItemTypes',
+    value: function getItemTypes() {
+      var retries = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+
+      var url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getItemType";
+      fetch(url).then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network Failure");
+      }).then(function (json_data) {
+        this.setState({ itemTypes: json_data });
+        this.setDefaultItem('itemType', json_data[0].ID);
+      }.bind(this)).catch(function (error) {
+        if (retries > 0) {
+          setTimeout(this.getItemTypes, 250, retries - 1);
+        } else {
+          this.setState({ alert: true, alertMessage: "Failed to fetch item types, check your network connection", alertType: "danger" });
+        }
+      }.bind(this));
+    }
+  }, {
+    key: 'getDamageStatuses',
+    value: function getDamageStatuses() {
+      var retries = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+
+      var url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getDamageStatuses";
+      fetch(url).then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network Failure");
+      }).then(function (json_data) {
+        this.setState({ damageStatuses: json_data });
+      }.bind(this)).catch(function (error) {
+        if (retries > 0) {
+          setTimeout(this.getDamageStatuses, 250, retries - 1);
+        } else {
+          this.setState(alert, alertMessage, alertType);
+        }
+      }.bind(this));
+    }
+  }, {
+    key: 'setDefaultItem',
+    value: function setDefaultItem(stateVar, value) {
+      this.setState(_defineProperty({}, stateVar, value));
+    }
+  }, {
+    key: 'handleInputChange',
+    value: function handleInputChange(event) {
+      var name = event.target.name;
+      var value = event.target.value;
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleItemPicChange',
+    value: function handleItemPicChange(event) {
+      var _setState3;
+
+      var name = event.target.name;
+      var picName = name + "Name";
+      var fileName = event.target.files[0].name;
+      var file = event.target.files[0];
+
+      this.setState((_setState3 = {}, _defineProperty(_setState3, picName, fileName), _defineProperty(_setState3, name, file), _setState3));
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event) {
+      var retries = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
+      var retry = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      if (!retry) {
+        this.setState({ alert: true, alertMessage: "Submitting...", alertType: "primary" });
+      }
+      event.preventDefault();
+      event.persist();
+      var formData = new FormData();
+      formData.append("itemName", this.state.itemName);
+      formData.append("helpURL", this.state.helpURL);
+      formData.append("totalCost", this.state.totalCost);
+      formData.append("rentalPrice", this.state.rentalPrice);
+      formData.append("itemType", this.state.itemType);
+      formData.append("largeItemPic", this.state.largeItemPic, this.state.largeItemPicName);
+      formData.append("smallItemPic", this.state.smallItemPic, this.state.smallItemPicName);
+      formData.append("packages", JSON.stringify(this.state.packages));
+
+      //routing info for backend
+      formData.append("data", "Inventory");
+      formData.append("action", "addItem");
+
+      var submit = {};
+      var url = "https://dev.dma.ucla.edu/api/";
+      var fetchOptions = {
+        method: "POST",
+        body: formData
+        //credentials: 'same-origin'
+      };
+      //TODO: handle unauthorized errors
+      fetch(url, fetchOptions).then(function (response) {
+        if (response.ok) {
+          return response.text();
+        }
+        throw new Error("Network Failure");
+      }).then(function (text) {
+        var json_data = JSON.parse(text);
+        if (json_data.success === true) {
+          this.setState({ alert: true, alertMessage: "Add Successful", alertType: "success" });
+        } else {
+          this.setState({ alert: true, alertMessage: json_data.error, alertType: "danger" });
+        }
+      }.bind(this)).catch(function (error) {
+        if (retries > 0) {
+          setTimeout(this.handleSubmit, 1000, event, retries - 1, true);
+          console.log("Retrying, " + retries + " left");
+        } else {
+          this.setState({ alert: true,
+            alertMessage: "Check your network connection, could not submit form",
+            alertType: "danger"
+          });
+        }
+      }.bind(this));
+    }
+  }, {
+    key: 'removePackageForm',
+    value: function removePackageForm(package_id) {
+      return function (event) {
+        event.preventDefault();
+        this.setState(function (prevState) {
+          prevState.packages.splice(package_id, 1);
+          return { packages: prevState.packages };
+        });
+      }.bind(this);
+    }
+  }, {
+    key: 'appendPackageForm',
+    value: function appendPackageForm(event) {
+      event.preventDefault();
+      //TODO: may want to find a more "conventional", extendable way to set defaults...
+      var packageData = { serialNumber: "", damageStatus: "1" };
+      this.setState(function (prevState) {
+        return { packages: [].concat(_toConsumableArray(prevState.packages), [packageData]) };
+      });
+    }
+  }, {
+    key: 'handlePackageFormChange',
+    value: function handlePackageFormChange(package_id) {
+      return function (event) {
+        event.preventDefault();
+        var name = event.target.name;
+        var newValue = event.target.value;
+        this.setState(function (prevState) {
+          var packages = [].concat(_toConsumableArray(prevState.packages));
+          packages[package_id][name] = newValue;
+          return { packages: packages };
+        });
+      }.bind(this);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      var itemTypes = this.state.itemTypes.map(function (type) {
+        return _react2.default.createElement(
+          'option',
+          { value: type.ID, key: type.ID },
+          type.name
+        );
+      });
+
+      var addPackageForms = this.state.packages.map(function (pkg_vals, idx) {
+        return _react2.default.createElement(AddPackageForm, { key: idx, serialNumber: pkg_vals.serialNumber,
+          handleFormChange: _this3.handlePackageFormChange(idx),
+          removeForm: _this3.removePackageForm(idx),
+          damageStatuses: _this3.state.damageStatuses,
+          damageStatus: pkg_vals.damageStatus,
+          seqNum: idx });
+      });
+
+      var alertType = this.state.alertType;
+      var alert = this.state.alert ? _react2.default.createElement(
+        'div',
+        { className: 'alert alert-' + alertType, role: 'alert' },
+        this.state.alertMessage
+      ) : null;
+      return _react2.default.createElement(
+        'form',
+        { onSubmit: this.handleSubmit },
+        alert,
+        _react2.default.createElement(
+          FormRow,
+          null,
+          _react2.default.createElement(
+            FormGroup,
+            { width: 6 },
+            _react2.default.createElement(TextInput, { name: 'itemName', placeholder: 'Item Name',
+              value: this.state.itemName, onChange: this.handleInputChange })
+          ),
+          _react2.default.createElement(
+            FormGroup,
+            { width: 6 },
+            _react2.default.createElement(TextInput, { name: 'helpURL', placeholder: 'Help URL',
+              value: this.state.helpURL, onChange: this.handleInputChange })
+          )
+        ),
+        _react2.default.createElement(
+          FormRow,
+          null,
+          _react2.default.createElement(
+            FormGroup,
+            { width: 4 },
+            _react2.default.createElement(
+              'label',
+              { htmlFor: 'largeItemPic' },
+              'Large Picture of Item'
+            ),
+            _react2.default.createElement('input', { id: 'largeItemPic', className: 'form-control-file',
+              type: 'file', name: 'largeItemPic',
+              onChange: this.handleItemPicChange })
+          ),
+          _react2.default.createElement(
+            FormGroup,
+            { width: 4 },
+            _react2.default.createElement(
+              'label',
+              { htmlFor: 'smallItemPic' },
+              'Small Picture of Item'
+            ),
+            _react2.default.createElement('input', { id: 'smallItemPic', className: 'form-control-file',
+              type: 'file', name: 'smallItemPic',
+              onChange: this.handleItemPicChange })
+          )
+        ),
+        _react2.default.createElement(
+          FormRow,
+          null,
+          _react2.default.createElement(
+            FormGroup,
+            { width: 4 },
+            _react2.default.createElement(TextInput, { name: 'totalCost', placeholder: 'Total Cost',
+              value: this.state.totalCost, onChange: this.handleInputChange })
+          ),
+          _react2.default.createElement(
+            FormGroup,
+            { width: 4 },
+            _react2.default.createElement(TextInput, { name: 'rentalPrice', placeholder: 'Rental Price',
+              value: this.state.rentalPrice, onChange: this.handleInputChange })
+          ),
+          _react2.default.createElement(
+            FormGroup,
+            { width: 4 },
+            _react2.default.createElement(
+              'label',
+              { htmlFor: 'itemType' },
+              'Item Type'
+            ),
+            _react2.default.createElement(
+              'select',
+              { id: 'itemType', className: 'form-control', name: 'itemType',
+                value: this.state.itemType, onChange: this.handleInputChange },
+              itemTypes
+            )
+          )
+        ),
+        addPackageForms,
+        _react2.default.createElement(
+          FormGroup,
+          null,
+          _react2.default.createElement(
+            'button',
+            { onClick: this.appendPackageForm },
+            'Add Package'
+          )
+        ),
+        _react2.default.createElement(
+          FormRow,
+          null,
+          _react2.default.createElement(
+            FormGroup,
+            { width: 1 },
+            _react2.default.createElement('input', { type: 'submit', value: 'Submit', className: 'btn btn-outline-success' })
+          )
+        )
+      );
+    }
+  }]);
+
+  return AddInventoryForm;
+}(_react2.default.Component);
+
+var AddPackageForm = function (_React$Component3) {
+  _inherits(AddPackageForm, _React$Component3);
+
+  function AddPackageForm(props) {
+    _classCallCheck(this, AddPackageForm);
+
+    return _possibleConstructorReturn(this, (AddPackageForm.__proto__ || Object.getPrototypeOf(AddPackageForm)).call(this, props));
+  }
+
+  _createClass(AddPackageForm, [{
+    key: 'render',
+    value: function render() {
+      var damageStatus = this.props.damageStatus;
+      var damageStatuses = this.props.damageStatuses;
+      var statusOpts = damageStatuses.map(function (status) {
+        return _react2.default.createElement(
+          'option',
+          { value: status.ID, key: status.ID },
+          status.name
+        );
+      });
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'h5',
+          null,
+          'Package ',
+          this.props.seqNum + 1
+        ),
+        _react2.default.createElement(
+          FormGroup,
+          null,
+          _react2.default.createElement(
+            'button',
+            { type: 'button', onClick: this.props.removeForm, className: 'btn btn-outline-danger btn-sm' },
+            'Remove Package'
+          )
+        ),
+        _react2.default.createElement(
+          FormRow,
+          null,
+          _react2.default.createElement(
+            FormGroup,
+            { width: 3 },
+            _react2.default.createElement(TextInput, { name: 'serialNumber', placeholder: 'Serial Number',
+              value: this.props.serialNumber, onChange: this.props.handleFormChange })
+          ),
+          _react2.default.createElement(
+            FormGroup,
+            { width: 3 },
+            _react2.default.createElement(
+              'label',
+              { htmlFor: 'damageStatus' },
+              'Damage Status'
+            ),
+            _react2.default.createElement(
+              'select',
+              { id: 'damageStatus', className: 'form-control', name: 'damageStatus',
+                value: damageStatus ? damageStatus : damageStatuses[0].ID, onChange: this.props.handleFormChange },
+              statusOpts
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return AddPackageForm;
+}(_react2.default.Component);
+
+_reactDom2.default.render(_react2.default.createElement(InvItemFormContainer, null), document.getElementById('root'));
+
+/***/ }),
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21681,7 +21959,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Modal = __webpack_require__(37);
+var _Modal = __webpack_require__(59);
 
 var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -21691,7 +21969,7 @@ exports.default = _Modal2.default;
 module.exports = exports["default"];
 
 /***/ }),
-/* 37 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21706,27 +21984,27 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(3);
+var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = __webpack_require__(11);
+var _reactDom = __webpack_require__(12);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _propTypes = __webpack_require__(10);
+var _propTypes = __webpack_require__(7);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _ModalPortal = __webpack_require__(38);
+var _ModalPortal = __webpack_require__(60);
 
 var _ModalPortal2 = _interopRequireDefault(_ModalPortal);
 
-var _ariaAppHider = __webpack_require__(18);
+var _ariaAppHider = __webpack_require__(46);
 
 var ariaAppHider = _interopRequireWildcard(_ariaAppHider);
 
-var _safeHTMLElement = __webpack_require__(20);
+var _safeHTMLElement = __webpack_require__(48);
 
 var _safeHTMLElement2 = _interopRequireDefault(_safeHTMLElement);
 
@@ -21941,7 +22219,7 @@ Modal.defaultStyles = {
 exports.default = Modal;
 
 /***/ }),
-/* 38 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21957,35 +22235,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(3);
+var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(10);
+var _propTypes = __webpack_require__(7);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _focusManager = __webpack_require__(39);
+var _focusManager = __webpack_require__(61);
 
 var focusManager = _interopRequireWildcard(_focusManager);
 
-var _scopeTab = __webpack_require__(40);
+var _scopeTab = __webpack_require__(62);
 
 var _scopeTab2 = _interopRequireDefault(_scopeTab);
 
-var _ariaAppHider = __webpack_require__(18);
+var _ariaAppHider = __webpack_require__(46);
 
 var ariaAppHider = _interopRequireWildcard(_ariaAppHider);
 
-var _refCount = __webpack_require__(19);
+var _refCount = __webpack_require__(47);
 
 var refCount = _interopRequireWildcard(_refCount);
 
-var _bodyClassList = __webpack_require__(41);
+var _bodyClassList = __webpack_require__(63);
 
 var bodyClassList = _interopRequireWildcard(_bodyClassList);
 
-var _safeHTMLElement = __webpack_require__(20);
+var _safeHTMLElement = __webpack_require__(48);
 
 var _safeHTMLElement2 = _interopRequireDefault(_safeHTMLElement);
 
@@ -22348,7 +22626,7 @@ module.exports = exports["default"];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 39 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22365,7 +22643,7 @@ exports.popWithoutFocus = popWithoutFocus;
 exports.setupScopedFocus = setupScopedFocus;
 exports.teardownScopedFocus = teardownScopedFocus;
 
-var _tabbable = __webpack_require__(17);
+var _tabbable = __webpack_require__(45);
 
 var _tabbable2 = _interopRequireDefault(_tabbable);
 
@@ -22446,7 +22724,7 @@ function teardownScopedFocus() {
 }
 
 /***/ }),
-/* 40 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22457,7 +22735,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = scopeTab;
 
-var _tabbable = __webpack_require__(17);
+var _tabbable = __webpack_require__(45);
 
 var _tabbable2 = _interopRequireDefault(_tabbable);
 
@@ -22527,7 +22805,7 @@ function scopeTab(node, event) {
 module.exports = exports["default"];
 
 /***/ }),
-/* 41 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22539,7 +22817,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.add = add;
 exports.remove = remove;
 
-var _refCount = __webpack_require__(19);
+var _refCount = __webpack_require__(47);
 
 var refCount = _interopRequireWildcard(_refCount);
 
@@ -22564,7 +22842,7 @@ function remove(bodyClass) {
 }
 
 /***/ }),
-/* 42 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*!
