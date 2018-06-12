@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {List, Table, Form, Input, Col, Select, DatePicker, Button, Alert} from 'antd';
+import {List, Table, Form, Input, Col, Select, DatePicker, Button, Alert, Upload, Icon} from 'antd';
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const RangePicker = DatePicker.RangePicker;
+const Dragger = Upload.Dragger;
 
 const DAMAGE_STATUS = 0;
 const IS_AVAILABLE = 1;
@@ -20,9 +21,11 @@ class EditableItem extends React.Component{
                   helpUrl: prevHelpURL,
                   serials: {},
                   damageStatusUpdates: {},
-                  availabilityUpdates: {}
+                  availabilityUpdates: {},
+                  newPackages: []
                  };
-    this.state = {packages: packages,
+    this.state = {
+                  packages: packages,
                   form: form,
                   status_key: [],
                   };
@@ -30,6 +33,10 @@ class EditableItem extends React.Component{
     this.getDamageStatusKey = this.getDamageStatusKey.bind(this);
     this.pushChange = this.pushChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.createPackageDeleteHandler = this.createPackageDeleteHandler.bind(this);
+    this.addPackage = this.addPackage.bind(this);
+    this.createNewPackageInputHandler = this.createNewPackageInputHandler.bind(this);
+    this.createNewPackageSelectHandler = this.createNewPackageSelectHandler.bind(this);
   }
 
   pushChange(event){
@@ -37,6 +44,23 @@ class EditableItem extends React.Component{
     const formData = this.state.form;
     formData['itemID'] = this.props.item.item_ID; //tack item ID on to changes before pushing up
     this.props.handleSubmit(formData);
+  }
+
+  addPackage(event){
+    event.preventDefault();
+    this.setState((prevState) => {
+      const form = prevState.form;
+      const newPackages = form.newPackages;
+      const addKey = newPackages.length; // key when referring changes on newPackage form on front end, useless on backend
+      const defaultPackageData = {
+                                    add_key: addKey,
+                                    pkg_number: "",
+                                    damage_status: "",
+                                    serial_number: ""
+                                  };
+      newPackages.push(defaultPackageData);
+      return {form: form};
+    });
   }
 
   componentDidMount(){
@@ -55,7 +79,6 @@ class EditableItem extends React.Component{
     });
 
   }
-
 
   getDamageStatusKey(){
     const url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getDamageStatusKey";
@@ -92,6 +115,19 @@ class EditableItem extends React.Component{
     }
   }
 
+  createPackageDeleteHandler(packageID){
+    return function(event){
+      event.preventDefault();
+      //TODO fetch (with creds) here to delete the package from DB
+      this.setState((prevState) => {
+
+        const packages = prevState.packages;
+        const pkgIdx = packages.findIndex((pkg) => pkg.pkg_id == packageID);
+        packages.splice(pkgIdx,1);
+        return {packages: packages};
+      })
+    }.bind(this);
+  }
 
   handleInputChange(event){
     event.preventDefault();
@@ -117,15 +153,67 @@ class EditableItem extends React.Component{
 
   }
 
+  createNewPackageInputHandler(addKey){
+    return function(event){
+      event.preventDefault();
+      const name = event.target.name;
+      const value = event.target.value;
+      this.setState((prevState) => {
+        const form = prevState.form;
+        form.newPackages[addKey][name] = value;
+        return {form: form}
+      });
+    }.bind(this);
+  }
+
+  createNewPackageSelectHandler(addKey){
+    return function(value){
+      this.setState((prevState) => {
+        const form = prevState.form;
+        form.newPackages[addKey]["damage_status"] = value;
+        return {form: form};
+      });
+    }.bind(this);
+
+  }
+
 
   render(){
     const formState = this.state.form;
     const damageStatusOptions = this.state.status_key.map((stat) =>
       <Option value={stat.ID}>{stat.name}</Option>
     );
+
+
+    const newPackages = formState.newPackages.map((pkg, idx) =>
+    <FormItem label={"New Package " + (parseInt(idx) + 1)}>
+      <InputGroup>
+        <Col span={6}>
+          <Input name="pkg_number" value={formState.newPackages[idx].pkg_number}
+                 onChange={this.createNewPackageInputHandler(idx)} placeholder="Package Number"
+                 style={{ width: 250 }}/>
+        </Col>
+        <Col span={6}>
+          <Select
+            placeholder="Package Damage Status"
+            defaultValue="good"
+            onChange={this.createNewPackageSelectHandler(idx)}
+            style={{ width: 250 }}>
+            {damageStatusOptions}
+          </Select>
+        </Col>
+        <Col span={6}>
+          <Input name="serial_number" value={formState.newPackages[idx].serial_number}
+                 onChange={this.createNewPackageInputHandler(idx)} placeholder="Serial Number"/>
+        </Col>
+      </InputGroup>
+    </FormItem>
+  );
+
+
     const editablePackages = this.state.packages.map((pkg) =>
       <FormItem label={pkg.item_name + " " + pkg.pkg_number}>
-        <InputGroup size="large">
+        <InputGroup>
           <Col span={6}>
             <Select
               placeholder="Package Availibility"
@@ -149,10 +237,23 @@ class EditableItem extends React.Component{
             <Input value={formState.serials[pkg.pkg_id]}
                    onChange={this.createSerialHandler(pkg.pkg_id)} placeholder="Serial Number"/>
           </Col>
+          <Col span={2}>
+            <Button type="danger" shape="circle" icon="close-circle-o" onClick={this.createPackageDeleteHandler(pkg.pkg_id)}/>
+          </Col>
         </InputGroup>
       </FormItem>
     );
+
     return <div>
+            {/* <Dragger
+              name="pics"
+              multiple="true"
+              action="not yet">
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            </Dragger> */}
             <Form onSubmit={this.pushChange}>
               <FormItem>
                 <Col span={5}>
@@ -166,9 +267,20 @@ class EditableItem extends React.Component{
                          onChange={this.handleInputChange} placeholder="Help Url" />
                 </Col>
               </FormItem>
+              <h3>Packages</h3>
               {editablePackages}
+              {formState.newPackages.length > 0 ?
+              <div>
+                <h3>Newly Added Packages</h3>
+                {newPackages}
+              </div> : ""}
               <FormItem>
-                <Button type="primary" htmlType="submit">Make Changes</Button>
+                <Col span={3}>
+                  <Button type="primary" htmlType="submit">Submit Changes</Button>
+                </Col>
+                <Col span={3}>
+                  <Button htmlType="button" onClick={this.addPackage}>Add Package</Button>
+                </Col>
               </FormItem>
             </Form>
           </div>
@@ -208,7 +320,6 @@ class ItemDetail extends React.Component{
     //now the changes made...
     formData.append("changeData", JSON.stringify(changeData));
 
-    //TODO: Create conf file to load endpoints from
     const url = "https://dev.dma.ucla.edu/api/";
     let fetchOptions = {
       method: "POST",
@@ -345,15 +456,20 @@ class ItemList extends React.Component{
 
     return function(event){
       event.preventDefault();
-      let itemsDetailed = this.state.itemsDetailed;
-      if (itemsDetailed[item_ID]){
-        delete itemsDetailed[item_ID];
-      }
-      else{
-        itemsDetailed[item_ID] = true;
-      }
-      this.setState({itemsDetailed: itemsDetailed});
-      return;
+      this.setState((prevState) => {
+        const itemsDetailed = prevState.itemsDetailed;
+        const itemsEditable = prevState.itemsEditable;
+        if (itemsDetailed[item_ID]){
+          delete itemsDetailed[item_ID];
+          if (itemsEditable[item_ID]){
+            delete itemsEditable[item_ID]; //make sure edit mode if off once toggled
+          }
+        }
+        else{
+          itemsDetailed[item_ID] = true;
+        }
+        return {itemsEditable: itemsEditable, itemsDetailed: itemsDetailed};
+      });
     }.bind(this);
 
   }
@@ -364,15 +480,18 @@ class ItemList extends React.Component{
   }
 
   toggleEdit(item_ID){
-    let itemsEditable = this.state.itemsEditable;
-    if (itemsEditable[item_ID]){
-      delete itemsEditable[item_ID];
-    }
-    else{
-      itemsEditable[item_ID] = true;
-    }
-    this.setState({itemsEditable: itemsEditable});
-    return
+    this.setState((prevState) => {
+      const itemsEditable = prevState.itemsEditable;
+      const itemsDetailed = prevState.itemsDetailed;
+      if (itemsEditable[item_ID]){
+        delete itemsEditable[item_ID];
+      }
+      else{
+        itemsEditable[item_ID] = true;
+        itemsDetailed[item_ID] = true; //also make sure detail is shown so edit page is visbile automatically
+      }
+      return {itemsEditable: itemsEditable, itemsDetailed: itemsDetailed}
+    });
   }
 
   createEditToggler(item_ID){
@@ -397,7 +516,7 @@ class ItemList extends React.Component{
                           <a onClick={this.toggleDetail(item.item_ID)}>{this.isDetailed(item.item_ID) ? "less" : "more"}</a>]}>
         <List.Item.Meta
           title={<a href="https://ant.design">{item.item_name}</a>}
-          description="Item Description to go Here"
+          description={item.contents}
         />
 
         <a href={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_lg/" + item.photo_url}>
