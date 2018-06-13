@@ -51,11 +51,9 @@ class EditableItem extends React.Component{
     this.setState((prevState) => {
       const form = prevState.form;
       const newPackages = form.newPackages;
-      const addKey = newPackages.length; // key when referring changes on newPackage form on front end, useless on backend
       const defaultPackageData = {
-                                    add_key: addKey,
                                     pkg_number: "",
-                                    damage_status: "",
+                                    damage_status: "1", //default damage status good (id 1)
                                     serial_number: ""
                                   };
       newPackages.push(defaultPackageData);
@@ -65,7 +63,6 @@ class EditableItem extends React.Component{
 
   componentDidMount(){
     this.getDamageStatusKey();
-
     //do non-trivial form autofill
     const serials = {};
     const packages = this.state.packages;
@@ -118,14 +115,33 @@ class EditableItem extends React.Component{
   createPackageDeleteHandler(packageID){
     return function(event){
       event.preventDefault();
-      //TODO fetch (with creds) here to delete the package from DB
-      this.setState((prevState) => {
-
-        const packages = prevState.packages;
-        const pkgIdx = packages.findIndex((pkg) => pkg.pkg_id == packageID);
-        packages.splice(pkgIdx,1);
-        return {packages: packages};
+      const url = "https://dev.dma.ucla.edu/api/";
+      const formData = new FormData();
+      formData.append("data", "Inventory");
+      formData.append("action", "deletePackage");
+      formData.append("packageID", packageID);
+      const fetchOptions = {
+        method: "POST",
+        body: formData
+        //credentials: 'same-origin'
+      }
+      fetch(url, fetchOptions)
+      .then((response) => {
+        return response.json();
       })
+      .then(function(data){
+        if (data["success"]){
+          this.setState((prevState) => {
+            const packages = prevState.packages;
+            const pkgIdx = packages.findIndex((pkg) => pkg.pkg_id == packageID);
+            packages.splice(pkgIdx,1);
+            return {packages: packages};
+          })
+        }
+        else{
+          alert("Could not delete package");
+        }
+      }.bind(this))
     }.bind(this);
   }
 
@@ -150,7 +166,6 @@ class EditableItem extends React.Component{
         return {form: form}
       });
     }.bind(this);
-
   }
 
   createNewPackageInputHandler(addKey){
@@ -174,86 +189,88 @@ class EditableItem extends React.Component{
         return {form: form};
       });
     }.bind(this);
+  }
 
+  createNewPackageDeleter(pkgIdx){
+    return function(event){
+      this.setState((prevState) => {
+        const form = prevState.form;
+        form.newPackages.splice(pkgIdx,1);
+        return {form: form};
+      });
+    }.bind(this);
   }
 
 
   render(){
+
     const formState = this.state.form;
     const damageStatusOptions = this.state.status_key.map((stat) =>
-      <Option value={stat.ID}>{stat.name}</Option>
-    );
-
+        <Option key={stat.ID} value={stat.ID}>{stat.name}</Option>
+      );
 
     const newPackages = formState.newPackages.map((pkg, idx) =>
-    <FormItem label={"New Package " + (parseInt(idx) + 1)}>
-      <InputGroup>
-        <Col span={6}>
-          <Input name="pkg_number" value={formState.newPackages[idx].pkg_number}
-                 onChange={this.createNewPackageInputHandler(idx)} placeholder="Package Number"
-                 style={{ width: 250 }}/>
-        </Col>
-        <Col span={6}>
-          <Select
-            placeholder="Package Damage Status"
-            defaultValue="good"
-            onChange={this.createNewPackageSelectHandler(idx)}
-            style={{ width: 250 }}>
-            {damageStatusOptions}
-          </Select>
-        </Col>
-        <Col span={6}>
-          <Input name="serial_number" value={formState.newPackages[idx].serial_number}
-                 onChange={this.createNewPackageInputHandler(idx)} placeholder="Serial Number"/>
-        </Col>
-      </InputGroup>
-    </FormItem>
-  );
-
-
-    const editablePackages = this.state.packages.map((pkg) =>
-      <FormItem label={pkg.item_name + " " + pkg.pkg_number}>
+      <FormItem key={idx} label={"New Package " + (parseInt(idx) + 1)}>
         <InputGroup>
           <Col span={6}>
-            <Select
-              placeholder="Package Availibility"
-              defaultValue={pkg.status == "Available" ? "available" : "not_available"}
-              style={{ width: 250 }}
-              onChange={this.createSelectHandler(pkg.pkg_id,IS_AVAILABLE)}>
-              <Option value="available">Available</Option>
-              <Option value="not_available">Not Available</Option>
-            </Select>
+            <Input name="pkg_number" value={formState.newPackages[idx].pkg_number}
+                   onChange={this.createNewPackageInputHandler(idx)} placeholder="Package Number"
+                   style={{ width: 250 }}/>
           </Col>
           <Col span={6}>
             <Select
               placeholder="Package Damage Status"
-              defaultValue={pkg.damage_status}
-              onChange={this.createSelectHandler(pkg.pkg_id,DAMAGE_STATUS)}
+              defaultValue="good"
+              onChange={this.createNewPackageSelectHandler(idx)}
               style={{ width: 250 }}>
               {damageStatusOptions}
             </Select>
           </Col>
           <Col span={6}>
-            <Input value={formState.serials[pkg.pkg_id]}
-                   onChange={this.createSerialHandler(pkg.pkg_id)} placeholder="Serial Number"/>
+            <Input name="serial_number" value={formState.newPackages[idx].serial_number}
+                   onChange={this.createNewPackageInputHandler(idx)} placeholder="Serial Number"/>
           </Col>
           <Col span={2}>
-            <Button type="danger" shape="circle" icon="close-circle-o" onClick={this.createPackageDeleteHandler(pkg.pkg_id)}/>
+            <Button type="danger" shape="circle" icon="close-circle-o" onClick={this.createNewPackageDeleter(idx)}/>
           </Col>
         </InputGroup>
       </FormItem>
     );
 
+    const editablePackages = this.state.packages.map((pkg) =>
+        <FormItem key={pkg.pkg_id} label={pkg.item_name + " " + pkg.pkg_number}>
+          <InputGroup>
+            <Col span={6}>
+              <Select
+                placeholder="Package Availibility"
+                defaultValue={pkg.status == "Available" ? "available" : "not_available"}
+                style={{ width: 250 }}
+                onChange={this.createSelectHandler(pkg.pkg_id,IS_AVAILABLE)}>
+                <Option value="available">Available</Option>
+                <Option value="not_available">Not Available</Option>
+              </Select>
+            </Col>
+            <Col span={6}>
+              <Select
+                placeholder="Package Damage Status"
+                defaultValue={pkg.damage_status}
+                onChange={this.createSelectHandler(pkg.pkg_id,DAMAGE_STATUS)}
+                style={{ width: 250 }}>
+                {damageStatusOptions}
+              </Select>
+            </Col>
+            <Col span={6}>
+              <Input value={formState.serials[pkg.pkg_id]}
+                     onChange={this.createSerialHandler(pkg.pkg_id)} placeholder="Serial Number"/>
+            </Col>
+            <Col span={2}>
+              <Button type="danger" shape="circle" icon="close-circle-o" onClick={this.createPackageDeleteHandler(pkg.pkg_id)}/>
+            </Col>
+          </InputGroup>
+        </FormItem>
+      );
+
     return <div>
-            {/* <Dragger
-              name="pics"
-              multiple="true"
-              action="not yet">
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-            </Dragger> */}
             <Form onSubmit={this.pushChange}>
               <FormItem>
                 <Col span={5}>
@@ -284,7 +301,7 @@ class EditableItem extends React.Component{
               </FormItem>
             </Form>
           </div>
-  }
+    }
 }
 
 
@@ -321,7 +338,7 @@ class ItemDetail extends React.Component{
     formData.append("changeData", JSON.stringify(changeData));
 
     const url = "https://dev.dma.ucla.edu/api/";
-    let fetchOptions = {
+    const fetchOptions = {
       method: "POST",
       body: formData
       //credentials: 'same-origin'
@@ -331,7 +348,6 @@ class ItemDetail extends React.Component{
     .then((response) => {
       if (response.ok){
         const text = response.text();
-        console.log(text);
         return text;
       }
     })
@@ -394,7 +410,7 @@ class ItemDetail extends React.Component{
                       {showAlert ? <Alert message={alertMessage} type={alertType}/> : ""}
                       <p>Rental Rate: ${item.rental_cost} / Day</p>
                       <RangePicker size={'default'} />
-                      <Table dataSource={packages} columns={columns} />
+                      <Table dataSource={packages} columns={columns} rowKey="pkg_id"/>
                     </div>
     );
 
@@ -513,9 +529,11 @@ class ItemList extends React.Component{
     dataSource={this.state.uniqueItems}
     renderItem={item => (
       <List.Item actions={[<a onClick={this.createEditToggler(item.item_ID)}>{this.isEditable(item.item_ID) ? "view" : "edit"}</a>,
-                          <a onClick={this.toggleDetail(item.item_ID)}>{this.isDetailed(item.item_ID) ? "less" : "more"}</a>]}>
+                          <a onClick={this.toggleDetail(item.item_ID)}>{this.isDetailed(item.item_ID) ? "less" : "more"}</a>]}
+                 key={item.item_ID}>
+
         <List.Item.Meta
-          title={<a href="https://ant.design">{item.item_name}</a>}
+          title={item.item_name}
           description={item.contents}
         />
 
@@ -535,7 +553,7 @@ class ItemList extends React.Component{
 
       </List.Item>
     )}
-  />
+  /> //close List component
   }
 }
 

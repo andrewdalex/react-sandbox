@@ -31352,11 +31352,9 @@ var EditableItem = function (_React$Component) {
       this.setState(function (prevState) {
         var form = prevState.form;
         var newPackages = form.newPackages;
-        var addKey = newPackages.length; // key when referring changes on newPackage form on front end, useless on backend
         var defaultPackageData = {
-          add_key: addKey,
           pkg_number: "",
-          damage_status: "",
+          damage_status: "1", //default damage status good (id 1)
           serial_number: ""
         };
         newPackages.push(defaultPackageData);
@@ -31367,7 +31365,6 @@ var EditableItem = function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.getDamageStatusKey();
-
       //do non-trivial form autofill
       var serials = {};
       var packages = this.state.packages;
@@ -31420,14 +31417,32 @@ var EditableItem = function (_React$Component) {
     value: function createPackageDeleteHandler(packageID) {
       return function (event) {
         event.preventDefault();
-        this.setState(function (prevState) {
-          var packages = prevState.packages;
-          var pkgIdx = packages.findIndex(function (pkg) {
-            return pkg.pkg_id == packageID;
-          });
-          packages.splice(pkgIdx, 1);
-          return { packages: packages };
-        });
+        var url = "https://dev.dma.ucla.edu/api/";
+        var formData = new FormData();
+        formData.append("data", "Inventory");
+        formData.append("action", "deletePackage");
+        formData.append("packageID", packageID);
+        var fetchOptions = {
+          method: "POST",
+          body: formData
+          //credentials: 'same-origin'
+        };
+        fetch(url, fetchOptions).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          if (data["success"]) {
+            this.setState(function (prevState) {
+              var packages = prevState.packages;
+              var pkgIdx = packages.findIndex(function (pkg) {
+                return pkg.pkg_id == packageID;
+              });
+              packages.splice(pkgIdx, 1);
+              return { packages: packages };
+            });
+          } else {
+            alert("Could not delete package");
+          }
+        }.bind(this));
       }.bind(this);
     }
   }, {
@@ -31481,6 +31496,17 @@ var EditableItem = function (_React$Component) {
       }.bind(this);
     }
   }, {
+    key: 'createNewPackageDeleter',
+    value: function createNewPackageDeleter(pkgIdx) {
+      return function (event) {
+        this.setState(function (prevState) {
+          var form = prevState.form;
+          form.newPackages.splice(pkgIdx, 1);
+          return { form: form };
+        });
+      }.bind(this);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -31489,7 +31515,7 @@ var EditableItem = function (_React$Component) {
       var damageStatusOptions = this.state.status_key.map(function (stat) {
         return _react2.default.createElement(
           Option,
-          { value: stat.ID },
+          { key: stat.ID, value: stat.ID },
           stat.name
         );
       });
@@ -31497,7 +31523,7 @@ var EditableItem = function (_React$Component) {
       var newPackages = formState.newPackages.map(function (pkg, idx) {
         return _react2.default.createElement(
           FormItem,
-          { label: "New Package " + (parseInt(idx) + 1) },
+          { key: idx, label: "New Package " + (parseInt(idx) + 1) },
           _react2.default.createElement(
             InputGroup,
             null,
@@ -31526,6 +31552,11 @@ var EditableItem = function (_React$Component) {
               { span: 6 },
               _react2.default.createElement(_input2.default, { name: 'serial_number', value: formState.newPackages[idx].serial_number,
                 onChange: _this2.createNewPackageInputHandler(idx), placeholder: 'Serial Number' })
+            ),
+            _react2.default.createElement(
+              _col2.default,
+              { span: 2 },
+              _react2.default.createElement(_button2.default, { type: 'danger', shape: 'circle', icon: 'close-circle-o', onClick: _this2.createNewPackageDeleter(idx) })
             )
           )
         );
@@ -31534,7 +31565,7 @@ var EditableItem = function (_React$Component) {
       var editablePackages = this.state.packages.map(function (pkg) {
         return _react2.default.createElement(
           FormItem,
-          { label: pkg.item_name + " " + pkg.pkg_number },
+          { key: pkg.pkg_id, label: pkg.item_name + " " + pkg.pkg_number },
           _react2.default.createElement(
             InputGroup,
             null,
@@ -31777,7 +31808,7 @@ var ItemDetail = function (_React$Component2) {
           ' / Day'
         ),
         _react2.default.createElement(RangePicker, { size: 'default' }),
-        _react2.default.createElement(_table2.default, { dataSource: packages, columns: columns })
+        _react2.default.createElement(_table2.default, { dataSource: packages, columns: columns, rowKey: 'pkg_id' })
       );
 
       return this.state.isEditable ? _react2.default.createElement(EditableItem, { item: item,
@@ -31913,13 +31944,10 @@ var ItemList = function (_React$Component3) {
                 'a',
                 { onClick: _this5.toggleDetail(item.item_ID) },
                 _this5.isDetailed(item.item_ID) ? "less" : "more"
-              )] },
+              )],
+              key: item.item_ID },
             _react2.default.createElement(_list2.default.Item.Meta, {
-              title: _react2.default.createElement(
-                'a',
-                { href: 'https://ant.design' },
-                item.item_name
-              ),
+              title: item.item_name,
               description: item.contents
             }),
             _react2.default.createElement(
@@ -31937,7 +31965,7 @@ var ItemList = function (_React$Component3) {
               statusKey: _this5.state.status_key }) : ""
           );
         }
-      });
+      }); //close List component
     }
   }]);
 
