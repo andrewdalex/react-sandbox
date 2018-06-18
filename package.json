@@ -1,12 +1,13 @@
 {
   "name": "react-sandbox",
   "version": "1.0.0",
-  "description": "Testing react dev",
+  "description": "Inventory Item Display project ",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start:dev": "webpack-dev-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod-build": "webpack --config prod.webpack.config.js"
   },
   "author": "Andrew Alex",
   "license": "ISC",
@@ -24,7 +25,6 @@
     "css-loader": "^0.28.10",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-modal": "^3.1.5",
     "style-loader": "^0.20.2"
   }
 }

@@ -31739,7 +31739,6 @@ var ItemDetail = function (_React$Component2) {
       fetch(url, fetchOptions).then(function (response) {
         if (response.ok) {
           var text = response.text();
-          console.log(text);
           return text;
         }
       }).then(function (text) {

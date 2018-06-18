@@ -427,7 +427,7 @@ class ItemDetail extends React.Component{
 
 class ItemList extends React.Component{
   constructor(props){
-    super(props)
+    super(props);
     this.state = {itemList: [], uniqueItems: [],
                   itemsDetailed: {}, checkedOutPckgs: [],
                   reservedPckgs: [], status_key: [], package_statuses: [],
@@ -456,7 +456,7 @@ class ItemList extends React.Component{
       const uniqueItems = data['all_items'].filter(function(item, idx, arr){
         return arr.findIndex((item_2) => item_2.item_ID === item.item_ID ) === idx
       });
-      this.setState({uniqueItems: uniqueItems})
+      this.setState({uniqueItems: uniqueItems});
       this.setState({checkedOutPckgs: data['checked_out_ids']});
       this.setState({reservedPckgs: data['reserved_ids']});
     }.bind(this))
