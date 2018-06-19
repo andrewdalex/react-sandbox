@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {List, Table, Form, Input, Col, Select, DatePicker, Button, Alert, Upload, Icon} from 'antd';
+import {List, Table, Form, Input,Row, Col, Select, DatePicker, Button, Alert, Icon} from 'antd';
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const RangePicker = DatePicker.RangePicker;
-const Dragger = Upload.Dragger;
 
 const DAMAGE_STATUS = 0;
 const IS_AVAILABLE = 1;
@@ -538,7 +537,7 @@ class ItemList extends React.Component{
         />
 
         <a href={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_lg/" + item.photo_url}>
-          <img src={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_sm/" + item.photo_url}/>
+          <img style={{maxWidth: 150, maxHeight: 100}} src={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_sm/" + item.photo_url}/>
         </a>
         {this.isDetailed(item.item_ID) ?
             <ItemDetail item={item}
