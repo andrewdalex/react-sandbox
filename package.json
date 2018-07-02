@@ -4,10 +4,10 @@
   "description": "Inventory Item Display project ",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "start:dev": "webpack-dev-server",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prod-build": "webpack --config prod.webpack.config.js"
+    "build": "DMA_ENV=dev webpack --config webpack.config.js",
+    "prod-build-test": "DMA_ENV=dev webpack --config prod.webpack.config.js",
+    "prod-build-live": "DMA_ENV=live webpack --config prod.webpack.config.js"
+
   },
   "author": "Andrew Alex",
   "license": "ISC",

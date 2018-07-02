@@ -1,14 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {List, Table, Form, Input,Row, Col, Select, DatePicker, Button, Alert, Icon} from 'antd';
+import {List, Table, Form, Input,Row, Col, Select, Button, Alert, Icon} from 'antd';
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
-const RangePicker = DatePicker.RangePicker;
 
 const DAMAGE_STATUS = 0;
 const IS_AVAILABLE = 1;
+
+let SITE_URL;
+let CREDENTIALS;
+let MODE;
+
+if (process.env.NODE_ENV == "production" && process.env.DMA_ENV == "live"){
+  SITE_URL = "https://support.dma.ucla.edu/api/";
+  CREDENTIALS = "same-origin";
+  MODE = "same-origin";
+}
+else if (process.env.NODE_ENV == "production" && process.env.DMA_ENV == "dev"){
+  SITE_URL = "https://dev.dma.ucla.edu/api/";
+  CREDENTIALS = "same-origin";
+  MODE = "same-origin";
+}
+else{
+  SITE_URL = "https://dev.dma.ucla.edu/api/";
+  CREDENTIALS = "same-origin";
+  MODE = "cors";
+}
+
 
 class EditableItem extends React.Component{
   constructor(props){
@@ -77,8 +97,12 @@ class EditableItem extends React.Component{
   }
 
   getDamageStatusKey(){
-    const url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getDamageStatusKey";
-    fetch(url)
+    const url = SITE_URL + "?data=Inventory&action=getDamageStatusKey";
+    const fetchOptions = {
+      credentials: CREDENTIALS,
+      mode: MODE
+    };
+    fetch(url, fetchOptions)
     .then(
       (response) => response.json()
     )
@@ -113,16 +137,21 @@ class EditableItem extends React.Component{
 
   createPackageDeleteHandler(packageID){
     return function(event){
+      let resp = confirm("Are you sure you want to delete this package?");
+      if (!confirm("Are you sure you want to delete this package?")){
+        return;
+      }
       event.preventDefault();
-      const url = "https://dev.dma.ucla.edu/api/";
+      const url = SITE_URL;
       const formData = new FormData();
       formData.append("data", "Inventory");
       formData.append("action", "deletePackage");
       formData.append("packageID", packageID);
       const fetchOptions = {
         method: "POST",
-        body: formData
-        //credentials: 'same-origin'
+        body: formData,
+        credentials: CREDENTIALS,
+        mode: MODE
       }
       fetch(url, fetchOptions)
       .then((response) => {
@@ -211,12 +240,12 @@ class EditableItem extends React.Component{
     const newPackages = formState.newPackages.map((pkg, idx) =>
       <FormItem key={idx} label={"New Package " + (parseInt(idx) + 1)}>
         <InputGroup>
-          <Col span={6}>
+          <Col span={4}>
             <Input name="pkg_number" value={formState.newPackages[idx].pkg_number}
                    onChange={this.createNewPackageInputHandler(idx)} placeholder="Package Number"
                    style={{ width: 250 }}/>
           </Col>
-          <Col span={6}>
+          <Col span={4} offset={3}>
             <Select
               placeholder="Package Damage Status"
               defaultValue="good"
@@ -225,7 +254,7 @@ class EditableItem extends React.Component{
               {damageStatusOptions}
             </Select>
           </Col>
-          <Col span={6}>
+          <Col span={4} offset={3}>
             <Input name="serial_number" value={formState.newPackages[idx].serial_number}
                    onChange={this.createNewPackageInputHandler(idx)} placeholder="Serial Number"/>
           </Col>
@@ -239,7 +268,7 @@ class EditableItem extends React.Component{
     const editablePackages = this.state.packages.map((pkg) =>
         <FormItem key={pkg.pkg_id} label={pkg.item_name + " " + pkg.pkg_number}>
           <InputGroup>
-            <Col span={6}>
+            <Col span={4}>
               <Select
                 placeholder="Package Availibility"
                 defaultValue={pkg.status == "Available" ? "available" : "not_available"}
@@ -249,7 +278,7 @@ class EditableItem extends React.Component{
                 <Option value="not_available">Not Available</Option>
               </Select>
             </Col>
-            <Col span={6}>
+            <Col span={4} offset={3}>
               <Select
                 placeholder="Package Damage Status"
                 defaultValue={pkg.damage_status}
@@ -258,7 +287,7 @@ class EditableItem extends React.Component{
                 {damageStatusOptions}
               </Select>
             </Col>
-            <Col span={6}>
+            <Col span={4} offset={3}>
               <Input value={formState.serials[pkg.pkg_id]}
                      onChange={this.createSerialHandler(pkg.pkg_id)} placeholder="Serial Number"/>
             </Col>
@@ -291,12 +320,12 @@ class EditableItem extends React.Component{
                 {newPackages}
               </div> : ""}
               <FormItem>
-                <Col span={3}>
-                  <Button type="primary" htmlType="submit">Submit Changes</Button>
-                </Col>
-                <Col span={3}>
-                  <Button htmlType="button" onClick={this.addPackage}>Add Package</Button>
-                </Col>
+                  <Col span={3}>
+                    <Button type="primary" htmlType="submit">Submit Changes</Button>
+                  </Col>
+                  <Col span={3} offset={2}>
+                    <Button htmlType="button" onClick={this.addPackage}>Add Package</Button>
+                  </Col>
               </FormItem>
             </Form>
           </div>
@@ -336,11 +365,12 @@ class ItemDetail extends React.Component{
     //now the changes made...
     formData.append("changeData", JSON.stringify(changeData));
 
-    const url = "https://dev.dma.ucla.edu/api/";
+    const url = SITE_URL;
     const fetchOptions = {
       method: "POST",
-      body: formData
-      //credentials: 'same-origin'
+      body: formData,
+      credentials: CREDENTIALS,
+      mode: MODE
     };
 
     fetch(url, fetchOptions)
@@ -408,7 +438,6 @@ class ItemDetail extends React.Component{
                     <div>
                       {showAlert ? <Alert message={alertMessage} type={alertType}/> : ""}
                       <p>Rental Rate: ${item.rental_cost} / Day</p>
-                      <RangePicker size={'default'} />
                       <Table dataSource={packages} columns={columns} rowKey="pkg_id"/>
                     </div>
     );
@@ -427,15 +456,23 @@ class ItemDetail extends React.Component{
 class ItemList extends React.Component{
   constructor(props){
     super(props);
-    this.state = {itemList: [], uniqueItems: [],
-                  itemsDetailed: {}, checkedOutPckgs: [],
-                  reservedPckgs: [], status_key: [], package_statuses: [],
-                  itemsEditable: {},
+    this.state = {
+                  itemList:         [],
+                  uniqueItems:      [],
+                  itemsDetailed:    {},
+                  checkedOutPckgs:  [],
+                  reservedPckgs:    [],
+                  status_key:       [],
+                  package_statuses: [],
+                  itemsEditable:    {},
+                  userCanEdit:      false,
+                  permissionAlerts: {}
                 };
     this.getAvailable = this.getAvailable.bind(this);
     this.isDetailed = this.isDetailed.bind(this);
     this.toggleDetail = this.toggleDetail.bind(this);
     this.createEditToggler = this.createEditToggler.bind(this);
+    this.getUserEditPrivilege = this.getUserEditPrivilege.bind(this);
 
   }
 
@@ -445,8 +482,12 @@ class ItemList extends React.Component{
 
 
   getAvailable(){
-    const url = "https://dev.dma.ucla.edu/api/?data=Inventory&action=getAvailable";
-    fetch(url)
+    const url = SITE_URL + "?data=Inventory&action=getAvailable";
+    const fetchOptions = {
+      credentials: CREDENTIALS,
+      mode: MODE
+    };
+    fetch(url, fetchOptions)
     .then(
       (response) => response.json()
     )
@@ -464,6 +505,35 @@ class ItemList extends React.Component{
 
   componentDidMount(){
     this.getAvailable();
+    this.getUserEditPrivilege();
+  }
+
+
+  getUserEditPrivilege(){
+    const url = SITE_URL + "?data=Inventory&action=getUserEditPrivilege";
+    const fetchOptions = {
+      credentials: CREDENTIALS,
+      mode: MODE
+    };
+    fetch(url, fetchOptions)
+    .then(function(response){
+      if (response.ok){
+        return response.json();
+      }
+      throw new Error("Fetch response not okay");
+    })
+    .then(function(data){
+      if (data["error"]){
+        throw new Error(data["error"]);
+      }
+      else if (data["editItemPrivilege"]){
+        this.setState({userCanEdit: true});
+      }
+    }.bind(this))
+    .catch(function(error){
+      console.log("Error fetching user privileges", error.message);
+      console.log("Default to unprivileged");
+    })
   }
 
 
@@ -494,7 +564,18 @@ class ItemList extends React.Component{
     return this.state.itemsDetailed[item_ID];
   }
 
+
   toggleEdit(item_ID){
+    //this is not a completely secure way to prevent edits, so must verify on
+    //backend, this is just so good users interact with the system properly
+    if (!this.state.userCanEdit){
+      this.setState((prevState) => {
+        const permissionAlerts = prevState.permissionAlerts;
+        permissionAlerts[item_ID] = "You don't have permission to edit items";
+        return {permissionAlerts: permissionAlerts};
+      });
+      return;
+    }
     this.setState((prevState) => {
       const itemsEditable = prevState.itemsEditable;
       const itemsDetailed = prevState.itemsDetailed;
@@ -509,6 +590,7 @@ class ItemList extends React.Component{
     });
   }
 
+
   createEditToggler(item_ID){
     return function(event){
       event.preventDefault();
@@ -521,7 +603,15 @@ class ItemList extends React.Component{
     return this.state.itemsEditable[item_ID];
   }
 
-
+  createAlertCloseHandler(itemID){
+    return function(){
+      this.setState((prevState) => {
+        const permissionAlerts = prevState.permissionAlerts;
+        delete permissionAlerts[itemID];
+        return {permissionAlerts: permissionAlerts};
+      });
+    }.bind(this);
+  }
   render(){
     return <List
     itemLayout="vertical"
@@ -536,9 +626,20 @@ class ItemList extends React.Component{
           description={item.contents}
         />
 
-        <a href={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_lg/" + item.photo_url}>
-          <img style={{maxWidth: 150, maxHeight: 100}} src={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_sm/" + item.photo_url}/>
-        </a>
+        <div>
+          <a href={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_lg/" + item.photo_url}>
+            <img style={{maxWidth: 150, maxHeight: 100}} src={"https://dev.dma.ucla.edu/includes/images/reservation/pkg_sm/" + item.photo_url}/>
+          </a>
+        </div>
+
+        {this.state.permissionAlerts[item.item_ID] ?
+          <Row>
+            <Col span={6} offset={8}>
+              <Alert closable afterClose={this.createAlertCloseHandler(item.item_ID)} message={this.state.permissionAlerts[item.item_ID]} type="warning"/>
+            </Col>
+          </Row>
+         : ""}
+
         {this.isDetailed(item.item_ID) ?
             <ItemDetail item={item}
                         refreshItemData={this.getAvailable}
